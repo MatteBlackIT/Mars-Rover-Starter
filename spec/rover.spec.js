@@ -26,7 +26,7 @@ describe("Rover class", function () {
     let message = new Message('Test message with two commands', commands);
     let rover = new Rover(98382);    // Passes 98382 as the rover's position.
     let response = rover.receiveMessage(message);
-    expect(message.response).toBe(Message.commands);
+    expect(message.response).toBe(message.commands);
   });
 
   it("responds correctly to the status check command", function () {
@@ -42,31 +42,33 @@ describe("Rover class", function () {
   });
 
   it("responds correctly to the mode change command", function () {
+    let rover = new Rover(12212, 'NORMAL');
     let commands = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command('STATUS_CHECK')];
     let message = new Message('Test message with two commands', commands);
-    let rover = new Rover(98382);    // Passes 98382 as the rover's position.
     let response = rover.receiveMessage(message);
 
     expect(response.results[0].completed).toBe("true");
+    expect(rover.mode).toBe("LOW_POWER"); //test to make sure it can go back to normal
   });
 
   it("responds with a false completed value when attempting to move in LOW_POWER mode", () => {
+    let rover = new Rover(12212);
     let commands = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command('MOVE')];
     let message = new Message('Test message with two commands', commands);
-    let rover = new Rover(98382);    // Passes 98382 as the rover's position.
     let response = rover.receiveMessage(message);
 
     expect(response.results[1].completed).toBe("false");
   });
 
   it("responds with position for move command", () => {
-    let commands = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command('STATUS_CHECK')];
+    let rover = new Rover(25); 
+    let commands = [new Command('MOVE', 12212012)];
     let message = new Message('Test message with two commands', commands);
-    let rover = new Rover(25);    // Passes 98382 as the rover's position.
+     // Passes 98382 as the rover's position.
     let response = rover.receiveMessage(message);
 
     
-    expect(response.results[1].roverStatus.position).toBe(25);
+    expect(rover.position).toBe(12212012);
 
 
   });

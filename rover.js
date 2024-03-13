@@ -22,32 +22,42 @@ class Rover {
           },
         });
       }
-      switch (message.commands[i].commandType) {
+      switch (
+        message.commands[i].commandType //doesnt actually change the rover
+      ) {
         case "MODE_CHANGE":
           results.push({
             completed: "true",
             roverStatus: {
               mode: "LOW_POWER",
               generatorWatts: this.generatorWatts,
-              position: 25,
+              position: this.position,
+            },
+          });
+          break;
+
+        case "MOVE": //doesnt actually change the rover
+          results.push({
+            completed: "false",
+            roverStatus: {
+              mode: "LOW_POWER",
+              generatorWatts: this.generatorWatts,
+              position: this.position,
             },
           });
           break;
 
           case "MOVE":
             results.push({
-              completed: "false",
+              completed: "true",
               roverStatus: {
-                mode: 'LOW_POWER',
+                mode: "NORMAL",
                 generatorWatts: this.generatorWatts,
-                position: 25,
-              
+                position: this.position,
               },
-    
-              
-  
             });
             break;
+          
       }
     }
 
@@ -55,25 +65,29 @@ class Rover {
       message: message.name,
       results: results,
     };
-    console.log(response.message);
+    // console.log(response.message);
     return response;
   }
 }
 
 module.exports = Rover;
 
+let rover = new Rover(12212, "LOW_POWER");
 let commands = [
-  new Command("MODE_CHANGE", "LOW_POWER"),
-  new Command("MOVE"),
+  new Command('MODE_CHANGE', "LOW_POWER"),
+  new Command("STATUS_CHECK"),
+  new Command("MOVE", 25),
 ];
 let message = new Message("Test message with two commands", commands);
-let rover = new Rover(98382); // Passes 98382 as the rover's position.
+
 let response = rover.receiveMessage(message);
 
-// console.log(rover);
-// console.log(message);
-console.log(response);
-// console.log(message.commands);
+console.log("ROVER:xxxxxxxxxx", rover);
+console.log("MESSAGE.COMMANDS:xxxxxxxxxx", message.commands);
+console.log("MESSAGExxxxxxxxxxxx",message);
+console.log("RESPONSE(ROVER.RECIEVEMESSAGE):xxxxxxxx", response);
+console.log("RESOONES.RESULTS:xxxxxxxxxxxxxx", response.results);
+
 // console.log(message.commands.length);
 
 // let rover = new Rover(100);
