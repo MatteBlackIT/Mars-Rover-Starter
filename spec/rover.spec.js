@@ -16,7 +16,7 @@ describe("Rover class", function () {
   it("response returned by receiveMessage contains the name of the message", function () {
     let commands = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command('STATUS_CHECK')];
     let message = new Message('Test message with two commands', commands);
-    let rover = new Rover(98382);    // Passes 98382 as the rover's position.
+    let rover = new Rover(12212);    // Passes 98382 as the rover's position.
     let response = rover.receiveMessage(message);
     expect(response.message).toBe("Test message with two commands");
   });
@@ -24,9 +24,9 @@ describe("Rover class", function () {
   it("response returned by receiveMessage includes two results if two commands are sent in the message", function () {
     let commands = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command('STATUS_CHECK')];
     let message = new Message('Test message with two commands', commands);
-    let rover = new Rover(98382);    // Passes 98382 as the rover's position.
+    let rover = new Rover(12212012);    // Passes 98382 as the rover's position.
     let response = rover.receiveMessage(message);
-    expect(message.response).toBe(message.commands);
+    expect(response.results.length).toBe(commands.length);
   });
 
   it("responds correctly to the status check command", function () {
@@ -47,7 +47,7 @@ describe("Rover class", function () {
     let message = new Message('Test message with two commands', commands);
     let response = rover.receiveMessage(message);
 
-    expect(response.results[0].completed).toBe("true");
+    expect(response.results[0].completed).toBe(true);
     expect(rover.mode).toBe("LOW_POWER"); //test to make sure it can go back to normal
   });
 
@@ -57,7 +57,7 @@ describe("Rover class", function () {
     let message = new Message('Test message with two commands', commands);
     let response = rover.receiveMessage(message);
 
-    expect(response.results[1].completed).toBe("false");
+    expect(response.results[1].completed).toBe(false);
   });
 
   it("responds with position for move command", () => {
